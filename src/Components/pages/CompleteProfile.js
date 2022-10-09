@@ -1,15 +1,25 @@
-import React,{ useRef, useContext} from 'react';
+import React,{ useRef,useState, useContext} from 'react';
 import AuthContext from '../../Store/AuthContext'
 import styles from './Cp.module.css'
+import user from '../../images/user1.png';
+import url from '../../images/url.jpg'
 const CompleteProfile = () => {
     const authCtx = useContext(AuthContext);
+  const [loggedInUser, setLoggedInUser] = useState('')
+  const [updateProfile, setUpdateProfile] = useState(true)
     const token= authCtx.token;
     console.log(token);
     const userNameref= useRef();
     const userPicref = useRef();
 
+    const editHandler = ()=> {
+      setUpdateProfile(true);
+      userNameref.current.value= loggedInUser;
+    }
+
     const updatedetailsHandler = (e) => {
             e.preventDefault();
+
             const userName = userNameref.current.value;
             const userPic = userPicref.current.value;
 
@@ -36,7 +46,7 @@ const CompleteProfile = () => {
             
                     } else {
                       return res.json().then((data) => {
-                        // show an error modal
+                        // cann show an error modal
                         let errorMessage = 'Authentication failed!';
                         if (data && data.error && data.error.message) {
                           errorMessage = data.error.message;
@@ -49,13 +59,57 @@ const CompleteProfile = () => {
                   }).then(data => {
                     console.log('updated data',data);
                     // authCtx.login(data.idToken)
+                     
+       
+            fetch( 'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDS8nnD8MqJp08t46JCFNAEM-mnC_hRgHM',
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    idToken:token,
+                    
         
+                }),
+                headers:{
+                    'Content-Type': 'application/json',
+                }
+            }).then((res) => {
+                
+                if (res.ok) {
+                  return res.json();
+                  
+        
+                } else {
+                  return res.json().then((data) => {
+                    // cann show an error modal
+                    let errorMessage = 'Authentication failed!';
+                    if (data && data.error && data.error.message) {
+                      errorMessage = data.error.message;
+                    }
+                    // alert(errorMessage);
+                    // console.log(data);
+                    throw new Error(errorMessage);
+                  });
+                }
+              }).then(data => {
+                console.log('fetched data',data.users[0].displayName);
+                // authCtx.login(data.idToken)
+                let userName = data.users[0].displayName;
+                setLoggedInUser(userName)
+                setUpdateProfile(false)
+        
+              }).catch(err => {
+                  alert(err.message);
+              });
             
                   }).catch(err => {
                       alert(err.message);
                   });
             }
+           
     }
+
+    
+
   return (
     <>
       <header
@@ -73,7 +127,7 @@ const CompleteProfile = () => {
             fontStyle: 'italic',
           }}
         >
-          Welcome to Expense Tracker !!!
+          Welcome to Expense Tracker !!! 
         </h1>
         <p className={styles.text}>
           Your Profile is Incomplete{' '}
@@ -89,21 +143,35 @@ const CompleteProfile = () => {
 
       <hr></hr>
 
-      <div className={styles.container}>
+     {updateProfile && <div className={styles.container}>
           <div className={styles.title}><h2>Contact Information</h2>
             <button className={styles.cancelbtn}> Cancel</button>
           </div>
         <div className={styles.formDiv} >  
         <form className={styles.form} onSubmit={updatedetailsHandler}>
-          <label>Full Name</label>
-          <input type='text' placeholder='Full Name' ref={userNameref}/>
+        <div style={{ display:'flex', flexDirection: 'row' }}>
+        <img src={user} alt=''  style={{width:'25px', height:'25px'}}/>
+          <label>Full Name</label>       
+          <input type='text'  placeholder='Full Name' name='fullName'  ref={userNameref}/>
+        </div>
+        <div style={{ display:'flex', flexDirection: 'row' }}>
+          <img src={url} alt='' style={{width:'25px', height:'25px'}}/>
           <label>Profile Photo URL </label>
           <input type='text' placeholder= 'Profile Photo URL' ref={userPicref}/>
+          </div>
           <br/>
           <button className={styles.updatebtn}>Update</button>
        </form>
+       
        </div>
-      </div>
+       
+      </div>}
+
+      {!updateProfile && <div  style={{ display:'flex',justifyContent: 'space-evenly' }}>
+     
+        <div className={styles.userdetail}> <span style={{color:'navy'}}>User :</span> {loggedInUser}</div>
+        <button onClick={editHandler} className={styles.editbtn}>Edit Details</button>
+      </div>}
     </>
   );
 };
