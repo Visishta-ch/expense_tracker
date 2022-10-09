@@ -7,6 +7,7 @@ const CompleteProfile = () => {
     const authCtx = useContext(AuthContext);
   const [loggedInUser, setLoggedInUser] = useState('')
   const [updateProfile, setUpdateProfile] = useState(true)
+  const [completeProfile, setCompleteProfile] = useState(true)
     const token= authCtx.token;
     console.log(token);
     const userNameref= useRef();
@@ -14,7 +15,7 @@ const CompleteProfile = () => {
 
     const editHandler = ()=> {
       setUpdateProfile(true);
-      userNameref.current.value= loggedInUser;
+      // userNameref.current.value= loggedInUser;
     }
 
     const updatedetailsHandler = (e) => {
@@ -96,6 +97,7 @@ const CompleteProfile = () => {
                 let userName = data.users[0].displayName;
                 setLoggedInUser(userName)
                 setUpdateProfile(false)
+                setCompleteProfile(false);
         
               }).catch(err => {
                   alert(err.message);
@@ -104,11 +106,42 @@ const CompleteProfile = () => {
                   }).catch(err => {
                       alert(err.message);
                   });
-            }
-           
-    }
+                  }        
+      }
 
-    
+      const verifyEmailHandler = () => {
+        fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDS8nnD8MqJp08t46JCFNAEM-mnC_hRgHM',{
+
+          method: 'POST',
+          body: JSON.stringify({
+            requestType:"VERIFY_EMAIL",
+            idToken:token
+          })
+        }).then(response =>{
+          if(response.ok){
+            return response.json();
+          }
+          else{
+            return response.json().then((data) => {
+              // cann show an error modal
+              let errorMessage = 'Authentication failed!';
+              if (data && data.error && data.error.message) {
+                errorMessage = data.error.message;
+              }
+              // alert(errorMessage);
+              // console.log(data);
+              throw new Error(errorMessage);
+            });
+
+          }
+        }).then(data => {
+          console.log('user  Verfied Mail', data)
+        }).catch(error => {
+          console.log(error.message)
+        }).catch(error => {
+          console.log(error.message)
+        })
+      }
 
   return (
     <>
@@ -129,7 +162,7 @@ const CompleteProfile = () => {
         >
           Welcome to Expense Tracker !!! 
         </h1>
-        <p className={styles.text}>
+       {completeProfile && <p className={styles.text}>
           Your Profile is Incomplete{' '}
           <button
             style={{ padding: '3px', border: 'none', background: 'none' }}
@@ -138,7 +171,13 @@ const CompleteProfile = () => {
             {' '}
             Complete your Profile
           </button>
+        </p>}
+        {!completeProfile && <p className={styles.text}>
+          Your Profile is Updated
+        
+        <button onClick={editHandler} style={{ padding: '3px', border: 'none', background: 'none' }}>Edit Details</button>
         </p>
+        }
       </header>
 
       <hr></hr>
@@ -168,9 +207,13 @@ const CompleteProfile = () => {
       </div>}
 
       {!updateProfile && <div  style={{ display:'flex',justifyContent: 'space-evenly' }}>
-     
+          <div>
         <div className={styles.userdetail}> <span style={{color:'navy'}}>User :</span> {loggedInUser}</div>
-        <button onClick={editHandler} className={styles.editbtn}>Edit Details</button>
+        {/* <button onClick={editHandler} className={styles.editbtn}>Edit Details</button> */}
+        </div>
+        <div>
+          <button onClick={verifyEmailHandler}>Verify Email</button>
+        </div>
       </div>}
     </>
   );
