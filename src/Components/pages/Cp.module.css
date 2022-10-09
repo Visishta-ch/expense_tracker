@@ -1,0 +1,62 @@
+.text{
+    border: 1px solid #ccc;
+    border-radius: 59px;
+    width: 339px;
+    text-align: center;
+    padding: 5px;
+}
+
+.container{
+    padding: 10px;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+
+}
+.title{
+    display: flex;
+    justify-content: space-evenly;
+    color: #544f4f;
+    font-family: 'Courier New', Courier, monospace;
+}
+.formDiv{
+    display: flex;
+    justify-content:center;
+}
+
+.form{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+}
+
+.form input{
+    width: 300px;
+    padding: 2px;
+    margin: 3px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    letter-spacing:2px;
+}
+
+.updatebtn{
+    margin: 10px;
+    padding: 2px;
+    background:skyblue;
+    color: white;
+    width: 100px;
+    height: 30px;
+    border-radius:5px;
+    border: 1px solid #ccc;
+    font-size:18px;
+}
+
+.cancelbtn{
+    color: red;
+    height: 29px;
+    width: 70px;
+    border: 1px solid red;
+    background: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-family: monospace;
+    font-size:18px
+}

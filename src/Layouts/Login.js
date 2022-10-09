@@ -1,8 +1,13 @@
-import React, { useState, useRef } from 'react';
-import {Link} from 'react-router-dom'
+import React, { useState, useRef, useContext } from 'react';
+import AuthContext  from '../Store/AuthContext';
+import {Link,useHistory} from 'react-router-dom'
 import styles from './Login.module.css';
 
 const Login = () => {
+
+    const authCtx = useContext(AuthContext);
+    const history = useHistory()
+
   const [isLogin, setIsLogin] = useState(false);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +53,10 @@ const Login = () => {
           });
         }
       }).then(data => {
-        console.log('Signup is successful',data)
+        console.log('Signup is successful',data.idToken);
+        // authCtx.login(data.idToken)
+        authCtx.login(data.idToken)
+        history.replace('/Home')
 
       }).catch(err => {
           alert(err.message);
@@ -91,8 +99,8 @@ const Login = () => {
               <br />
 
               <span>{error}</span>
-              <Link to='/Home' className={styles.loginbtn}>Submit</Link>
-            
+              <button to='/Home' className={styles.loginbtn}>Submit</button>
+                <button className={styles.forget}>Forget password</button>
               <div style={{ textAlign: 'center' }}>
         { !isLoading && <Link to='/' className={styles.signupbtn} onClick={switchAuthModeHandler}>
             {!isLogin ? 'Create new account' : ' Had Account ? Login '}
