@@ -1,11 +1,26 @@
 import React from 'react';
+import {Switch, Route } from 'react-router-dom';
 import Signup from './Layouts/SignUp'
+import Login from './Layouts/Login'
+import Home from './Components/pages/Home'
 import './App.css';
 
 function App() {
   return (
     <>
-      <Signup/>
+    {/* <Signup /> */}
+     <Switch>
+      <Route path="/" exact>
+        <Signup />
+      </Route>
+      
+      <Route path='/Login'>
+        <Login/>
+      </Route>
+      <Route path='/Home'>
+        <Home/>
+      </Route>
+     </Switch>
     </>
   );
 }

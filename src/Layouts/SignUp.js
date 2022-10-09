@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import {Link} from 'react-router-dom'
 import styles from './SignUp.module.css';
 import image from '../images/bg1.jpg';
 
@@ -37,40 +38,51 @@ const SignUp = () => {
     }
 
     console.log(enteredMail, pswd);
+    let url;
     setIsLoading(true);
     if (isLogin) {
+      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDS8nnD8MqJp08t46JCFNAEM-mnC_hRgHM'
+
     } else if (pswd === confirmPswd) {
-      console.log('sending request');
-      fetch(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDS8nnD8MqJp08t46JCFNAEM-mnC_hRgHM',
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            email: enteredMail,
-            password: pswd,
-            returnSecureToken: true,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
+        url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDS8nnD8MqJp08t46JCFNAEM-mnC_hRgHM'
         }
-      ).then((res) => {
-        setIsLoading(false);
-        if (res.ok) {
-          // ...
-        } else {
-          return res.json().then((data) => {
-            // show an error modal
-            let errorMessage = 'Authentication failed!';
-            if (data && data.error && data.error.message) {
-              errorMessage = data.error.message;
-            }
-            alert(errorMessage);
-            // console.log(data);
-          });
-        }
-      });
-    }
+
+        console.log('sending request');
+        fetch(
+          url,
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              email: enteredMail,
+              password: pswd,
+              returnSecureToken: true,
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        ).then((res) => {
+          setIsLoading(false);
+          if (res.ok) {
+            return res.json();
+          } else {
+            return res.json().then((data) => {
+              // show an error modal
+              let errorMessage = 'Authentication failed!';
+              if (data && data.error && data.error.message) {
+                errorMessage = data.error.message;
+              }
+              // alert(errorMessage);
+              // console.log(data);
+              throw new Error(errorMessage);
+            });
+          }
+        }).then(data => {
+          console.log('Signup is successful',data)
+        }).catch(err => {
+            alert(err.message);
+        });
+  
     // } else {
     //   alert('Confirm password should match with entered password');
     // }
@@ -120,9 +132,9 @@ const SignUp = () => {
           </form>
         </div>
         <div style={{ textAlign: 'center' }}>
-        { !isLoading && <button className={styles.loginbtn} onClick={switchAuthModeHandler}>
+        { !isLoading && <Link to='/Login' className={styles.loginbtn} onClick={switchAuthModeHandler}>
             {isLogin ? 'Create new account' : ' Had Account ? Login '}
-          </button>}
+          </Link>}
         {isLoading && <p> Sending Request</p>}
         </div>
       </div>

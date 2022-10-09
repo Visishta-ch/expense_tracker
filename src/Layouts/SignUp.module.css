@@ -76,7 +76,7 @@
   padding: 5px;
   margin: 10px auto;
   box-shadow: 1px 2px 2px rgb(90, 80, 80);
-  letter-spacing:1px;
+  letter-spacing: 1px;
 }
 
 .heading {
@@ -84,6 +84,7 @@
   justify-content: center;
   font-family: 'Josefin Sans', sans-serif;
   color: antiquewhite;
+  letter-spacing:2.5px;
 }
 
 .signupbtn {
@@ -104,12 +105,18 @@
   height: 33px;
   width: 417px;
   border: 1px solid #ccc;
-  padding: 3px;
-   margin-top:12px;
+  padding: 5px;
+  margin-top: 12px;
   margin-left: 5px;
   font-size: 18px;
   font-family: 'Roboto';
   text-align: center;
+  text-decoration: none;
+  list-style: none;
+}
+
+.loginbtn:hover{
+  color:black
 }
 
 span {
