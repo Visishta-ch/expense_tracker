@@ -2,6 +2,7 @@ import React,{useContext} from 'react';
 import styles from './Home.module.css';
 import {useHistory} from 'react-router-dom'
 import AuthContext from '../../Store/AuthContext'
+import DailyExpenses from '../../Expenses/DailyExpenses'
 const Home = () => {
     const authCtx = useContext(AuthContext)
     let eMail = authCtx.mail;
@@ -27,6 +28,10 @@ const Home = () => {
       </header>
       
           <hr></hr>
+
+          <div>
+            <DailyExpenses/>
+          </div>
     </>
   );
 };
