@@ -4,6 +4,7 @@ import Signup from './Layouts/SignUp'
 import Login from './Layouts/Login'
 import Home from './Components/pages/Home'
 import CompleteProfile from './Components/pages/CompleteProfile'
+import GetFPLink from './Layouts/GetFPLink'
 import './App.css';
 
 function App() {
@@ -23,6 +24,9 @@ function App() {
       </Route>
       <Route path='/CompleteProfile'>
           <CompleteProfile/>
+      </Route>
+      <Route path='/GetFPLink'>
+        <GetFPLink/>
       </Route>
      </Switch>
     </>

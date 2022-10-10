@@ -4,7 +4,7 @@ import {useHistory} from 'react-router-dom'
 import AuthContext from '../../Store/AuthContext'
 const Home = () => {
     const authCtx = useContext(AuthContext)
-    // let eMail = localStorage.getItem('mail');
+    let eMail = authCtx.mail;
     const history = useHistory();
     const showFormHandler = (e) => {
         e.preventDefault();
@@ -21,7 +21,8 @@ const Home = () => {
         <h1 style={{ color: 'gray', fontFamily: 'ui-rounded', fontStyle:'italic' }}>
          Welcome to  Expense Tracker !!!
         </h1>
-        <p className={styles.text}>Your Profile is Incomplete <button style={{padding:'3px',border: 'none', background:'none'}} onClick={showFormHandler}> Complete your Profile</button></p>
+        <p className={styles.text}>Your Profile is Incomplete <button style={{padding:'3px',border: 'none', background:'none', color:'red'}} onClick={showFormHandler}> Complete your Profile</button></p>
+        {authCtx.login && <span style={{color:'pink'}}>{eMail}</span>}
         <button className={styles.logoutbtn} onClick={logoutHandler}>LOGOUT</button>
       </header>
       

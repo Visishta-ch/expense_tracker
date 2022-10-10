@@ -7,10 +7,13 @@ import url from '../../images/url.jpg'
 const CompleteProfile = () => {
   const history= useHistory();
     const authCtx = useContext(AuthContext);
+    let email = authCtx.mail;
+    console.log(email)
   const [loggedInUser, setLoggedInUser] = useState('')
   const [updateProfile, setUpdateProfile] = useState(true)
   const [completeProfile, setCompleteProfile] = useState(true)
   const [userPhoto, setUserPhoto] = useState('')
+
     const token= authCtx.token;
     console.log(token);
     const userNameref= useRef();
@@ -175,7 +178,7 @@ const CompleteProfile = () => {
        {completeProfile && <p className={styles.text}>
           Your Profile is Incomplete{' '}
           <button
-            style={{ padding: '3px', border: 'none', background: 'none' }}
+            style={{ padding: '3px', border: 'none', background: 'none',color:'red' }}
         
           >
             {' '}
@@ -188,7 +191,7 @@ const CompleteProfile = () => {
         <button onClick={editHandler} style={{ padding: '3px', border: 'none', background: 'none' }}>Edit Details</button>
         </p>
         }
-
+        {authCtx.login && <caption style={{color:'pink'}}>{email}</caption>}
         <button className={styles.logoutbtn} onClick={logoutHandler}>LOGOUT</button>
  
       </header>

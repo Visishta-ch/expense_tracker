@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import {Link} from 'react-router-dom'
 import styles from './SignUp.module.css';
-import image from '../images/bg1.jpg';
+
 
 const SignUp = () => {
   const [isLogin, setIsLogin] = useState(false);

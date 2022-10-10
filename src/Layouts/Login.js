@@ -18,6 +18,10 @@ const Login = () => {
     setIsLogin((prevState) => !prevState);
   };
 
+  const forgetPasswordHandler = () => {
+      history.replace('/GetFPLink')
+  }
+
   const submitLoginHandler = (e) => {
     e.preventDefault();
     const userMail = emailInputRef.current.value;
@@ -102,7 +106,7 @@ const Login = () => {
 
               <span>{error}</span>
               <button to='/Home' className={styles.loginbtn}>Submit</button>
-                <button className={styles.forget}>Forget password</button>
+                <button className={styles.forget} onClick={forgetPasswordHandler}>Forget password</button>
               <div style={{ textAlign: 'center' }}>
         { !isLoading && <Link to='/' className={styles.signupbtn} onClick={switchAuthModeHandler}>
             {!isLogin ? 'Create new account' : ' Had Account ? Login '}
