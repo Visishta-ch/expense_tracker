@@ -8,6 +8,7 @@ const CompleteProfile = () => {
   const [loggedInUser, setLoggedInUser] = useState('')
   const [updateProfile, setUpdateProfile] = useState(true)
   const [completeProfile, setCompleteProfile] = useState(true)
+  const [userPhoto, setUserPhoto] = useState('')
     const token= authCtx.token;
     console.log(token);
     const userNameref= useRef();
@@ -95,7 +96,9 @@ const CompleteProfile = () => {
                 console.log('fetched data',data.users[0].displayName);
                 // authCtx.login(data.idToken)
                 let userName = data.users[0].displayName;
+                let userProfilePic = data.users[0].photoUrl;
                 setLoggedInUser(userName)
+                setUserPhoto(userProfilePic)
                 setUpdateProfile(false)
                 setCompleteProfile(false);
         
@@ -178,6 +181,8 @@ const CompleteProfile = () => {
         <button onClick={editHandler} style={{ padding: '3px', border: 'none', background: 'none' }}>Edit Details</button>
         </p>
         }
+
+       
       </header>
 
       <hr></hr>
@@ -206,13 +211,13 @@ const CompleteProfile = () => {
        
       </div>}
 
-      {!updateProfile && <div  style={{ display:'flex',justifyContent: 'space-evenly' }}>
-          <div>
+      {!updateProfile && <div  style={{ display:'grid', gridTemplateRows:'repeat(2,1fr)' }}>
+          <div style = {{ display:'flex', flexDirection: 'row', justifyContent: 'center' }}>
         <div className={styles.userdetail}> <span style={{color:'navy'}}>User :</span> {loggedInUser}</div>
-        {/* <button onClick={editHandler} className={styles.editbtn}>Edit Details</button> */}
+          <img src={userPhoto} alt='' style={{width:'100px', height:'80px'}}/>
         </div>
         <div>
-          <button onClick={verifyEmailHandler}>Verify Email</button>
+          <button onClick={verifyEmailHandler} className={styles.emailbtn}>Verify Email</button>
         </div>
       </div>}
     </>

@@ -5,3 +5,14 @@
     text-align: center;
     padding: 5px;
 }
+
+.logoutbtn{
+    border: 1px solid #ccc;
+    border-radius: 59px;
+    width:90px;
+    height: 30px;
+    text-align: center;
+    padding: 5px;
+    background-color: crimson;
+    color:white;
+}

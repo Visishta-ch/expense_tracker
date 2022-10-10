@@ -95,3 +95,10 @@
     position: relative;
     float:right;
 }
+.emailbtn{
+    width: 130px;
+    height:30px;
+    border: 1px solid rgb(169, 13, 86);
+    border-radius: 5px;
+    background: none;
+}

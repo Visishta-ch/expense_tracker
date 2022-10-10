@@ -21,6 +21,8 @@ const Login = () => {
   const submitLoginHandler = (e) => {
     e.preventDefault();
     const userMail = emailInputRef.current.value;
+    authCtx.userMail(userMail);
+    localStorage.setItem('userMail', userMail);
     const password = passwordInputRef.current.value;
     console.log('login detail', userMail, password);
 
