@@ -1,9 +1,11 @@
 import React,{ useRef,useState, useContext} from 'react';
+import {useHistory} from 'react-router-dom'
 import AuthContext from '../../Store/AuthContext'
 import styles from './Cp.module.css'
 import user from '../../images/user1.png';
 import url from '../../images/url.jpg'
 const CompleteProfile = () => {
+  const history= useHistory();
     const authCtx = useContext(AuthContext);
   const [loggedInUser, setLoggedInUser] = useState('')
   const [updateProfile, setUpdateProfile] = useState(true)
@@ -145,6 +147,11 @@ const CompleteProfile = () => {
           console.log(error.message)
         })
       }
+      const logoutHandler=()=>{
+        localStorage.removeItem('userMail')
+        authCtx.logout();
+        history.replace('/Login')
+      }
 
   return (
     <>
@@ -182,7 +189,8 @@ const CompleteProfile = () => {
         </p>
         }
 
-       
+        <button className={styles.logoutbtn} onClick={logoutHandler}>LOGOUT</button>
+ 
       </header>
 
       <hr></hr>
