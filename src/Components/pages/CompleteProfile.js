@@ -1,19 +1,69 @@
-import React,{ useRef,useState, useContext} from 'react';
-import {useHistory} from 'react-router-dom'
+import React,{ useRef,useState, useContext, useEffect} from 'react';
+import {useHistory,} from 'react-router-dom'
 import AuthContext from '../../Store/AuthContext'
 import styles from './Cp.module.css'
 import user from '../../images/user1.png';
 import url from '../../images/url.jpg'
+import axios from 'axios';
 const CompleteProfile = () => {
   const history= useHistory();
-    const authCtx = useContext(AuthContext);
-    let email = authCtx.mail;
-    console.log(email)
+  const authCtx = useContext(AuthContext);
+    
+  const userMail = localStorage.getItem('userMail')
   const [loggedInUser, setLoggedInUser] = useState('')
   const [updateProfile, setUpdateProfile] = useState(true)
   const [completeProfile, setCompleteProfile] = useState(true)
   const [userPhoto, setUserPhoto] = useState('')
 
+  useEffect(()=>{
+
+    fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDS8nnD8MqJp08t46JCFNAEM-mnC_hRgHM',{
+      method: 'POST',
+      body: JSON.stringify({
+          idToken:token,
+          
+
+      }),
+      headers:{
+          'Content-Type': 'application/json',
+      }
+    }).then(response =>{
+      if(response.status === 200){
+        console.log('ok')
+        return response.json();
+      }else{
+        return response.json().then((data) => {
+          // cann show an error modal
+          let errorMessage = 'Authentication failed!';
+          if (data && data.error && data.error.message) {
+            errorMessage = data.error.message;
+          }
+          // alert(errorMessage);
+          // console.log(data);
+          throw new Error(errorMessage);
+        });
+      }
+    }).then(data => {
+      console.log('fetched data',data.users[0].displayName);
+      // authCtx.login(data.idToken)
+      let userName = data.users[0].displayName;
+      let userProfilePic = data.users[0].photoUrl;
+      setLoggedInUser(userName)
+      setUserPhoto(userProfilePic)
+      setUpdateProfile(false)
+      setCompleteProfile(false);
+
+    }).catch(err => {
+        alert(err.message);
+    });
+ 
+       
+
+
+    
+  },[])
+  
+       
     const token= authCtx.token;
     console.log(token);
     const userNameref= useRef();
@@ -23,6 +73,8 @@ const CompleteProfile = () => {
       setUpdateProfile(true);
       // userNameref.current.value= loggedInUser;
     }
+
+
 
     const updatedetailsHandler = (e) => {
             e.preventDefault();
@@ -191,7 +243,7 @@ const CompleteProfile = () => {
         <button onClick={editHandler} style={{ padding: '3px', border: 'none', background: 'none' }}>Edit Details</button>
         </p>
         }
-        {authCtx.login && <caption style={{color:'pink'}}>{email}</caption>}
+        {authCtx.isLoggedIn && <caption style={{color:'Purple'}}>{userMail}</caption>}
         <button className={styles.logoutbtn} onClick={logoutHandler}>LOGOUT</button>
  
       </header>

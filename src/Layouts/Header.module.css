@@ -1,0 +1,117 @@
+
+nav{
+    background-color:black;
+    /* background-image: linear-gradient(
+        to right top,
+        #d16ba5,
+        #c777b9,
+        #ba83ca,
+        #aa8fd8,
+        #9a9ae1,
+        #8aa7ec,
+        #79b3f4,
+        #69bff8,
+        #52cffe,
+        #41dfff,
+        #46eefa,
+        #5ffbf1
+      ); */
+    color: white;
+    padding: 0.2em;
+    position:fixed;
+    width: 100%;
+    height:60px;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 5px;
+}
+/* *{
+    background-image: linear-gradient(
+    to right top,
+    #d16ba5,
+    #c777b9,
+    #ba83ca,
+    #aa8fd8,
+    #9a9ae1,
+    #8aa7ec,
+    #79b3f4,
+    #69bff8,
+    #52cffe,
+    #41dfff,
+    #46eefa,
+    #5ffbf1
+  );
+  background-repeat:repeat-y;
+  background-size:cover;
+  background-blend-mode: screen;
+
+} */
+.navbar{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+    letter-spacing:3.5px;
+    font-weight: bold;
+}
+.header{
+    position: relative;
+    top: 2.3rem;
+}
+
+
+.logoutbtn{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+    letter-spacing:3.5px;
+    font-weight: bold;
+    padding:8px;
+    margin:8px;
+}
+
+.logoutbtn:hover{
+    outline: 1px solid aliceblue;
+  border-radius:3px;
+}
+
+.body {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 5px;
+    height: 100vh;
+    place-items: center;
+    background-image: radial-gradient(
+      circle,
+      #c66bd1,
+      #b982de,
+      #af95e6,
+      #aaa6e9,
+      #abb5e8,
+      #a4bdeb,
+      #9ec4ec,
+      #9ccaec,
+      #7fceee,
+      #5cd1e9,
+      #37d4dd,
+      #1cd6ca
+    );
+    /* background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);; */
+  }
+
+  .title {
+    font-size: 100px;
+    font-weight: bold;
+    font-family: monospace;
+    color: white;
+    text-align: center;
+    text-shadow: 2px 5px 5px rgba(231, 55, 55, 0.4);
+    font-style: italic;
+  }
+  
+  .caption {
+    font-size: 16px;
+    display: flex;
+    justify-content: flex-end;
+  }

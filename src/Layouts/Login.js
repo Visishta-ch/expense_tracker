@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import AuthContext  from '../Store/AuthContext';
 import {Link,useHistory} from 'react-router-dom'
 import styles from './Login.module.css';
@@ -13,6 +13,11 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+  const storedToken = localStorage.getItem('tokenID')
+  useEffect(() => {
+      // const loggedUser = localStorage.getItem('userMail');
+      authCtx.login(storedToken);
+  },[])
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -62,7 +67,7 @@ const Login = () => {
         console.log('Signup is successful',data.idToken);
         // authCtx.login(data.idToken)
         authCtx.login(data.idToken)
-        history.replace('/Home')
+        history.push('/Header')
 
       }).catch(err => {
           alert(err.message);

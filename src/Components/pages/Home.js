@@ -1,16 +1,15 @@
-import React,{useContext} from 'react';
+import React,{useContext, useState} from 'react';
 import styles from './Home.module.css';
-import {useHistory} from 'react-router-dom'
+import {useHistory, Link} from 'react-router-dom'
 import AuthContext from '../../Store/AuthContext'
-import DailyExpenses from '../../Expenses/DailyExpenses'
+// import DailyExpenses from '../../Expenses/DailyExpenses'
 const Home = () => {
     const authCtx = useContext(AuthContext)
-    let eMail = authCtx.mail;
+  
+    const userMail = localStorage.getItem('userMail')
+   
     const history = useHistory();
-    const showFormHandler = (e) => {
-        e.preventDefault();
-        history.replace('/CompleteProfile')
-    }
+ 
     const logoutHandler=()=>{
       localStorage.removeItem('userMail')
       authCtx.logout();
@@ -22,15 +21,15 @@ const Home = () => {
         <h1 style={{ color: 'gray', fontFamily: 'ui-rounded', fontStyle:'italic' }}>
          Welcome to  Expense Tracker !!!
         </h1>
-        <p className={styles.text}>Your Profile is Incomplete <button style={{padding:'3px',border: 'none', background:'none', color:'red'}} onClick={showFormHandler}> Complete your Profile</button></p>
-        {authCtx.login && <span style={{color:'pink'}}>{eMail}</span>}
+        <p className={styles.text}>Your Profile is Incomplete <Link to='/CompleteProfile' style={{padding:'3px',border: 'none', background:'none', color:'red'}}> Complete your Profile</Link></p>
+        {authCtx.login && <span style={{color:'black'}}>{userMail}</span>}
         <button className={styles.logoutbtn} onClick={logoutHandler}>LOGOUT</button>
       </header>
       
           <hr></hr>
 
           <div>
-            <DailyExpenses/>
+            
           </div>
     </>
   );
