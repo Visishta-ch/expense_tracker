@@ -1,12 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState,useContext } from 'react';
 import {Link} from 'react-router-dom'
 import styles from './SignUp.module.css';
-
+import AuthContext from '../Store/AuthContext';
 
 const SignUp = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const authCtx  = useContext(AuthContext);
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const confirmPasswordRef = useRef();
@@ -37,6 +38,7 @@ const SignUp = () => {
       setError('password should have special characters');
     }
 
+    
     console.log(enteredMail, pswd);
     let url;
     setIsLoading(true);

@@ -86,7 +86,8 @@ const history = useHistory();
               color: 'white',
               position: 'relative',
               margin: '8px',
-
+              border:'none', 
+              top:'-18px',
               background: 'none',
             }}
             onClick={logoutHandler}

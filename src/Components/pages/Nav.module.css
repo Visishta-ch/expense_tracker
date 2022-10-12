@@ -42,11 +42,13 @@ nav{
     letter-spacing:3.5px;
     font-weight: bold;
     padding:8px;
+    top:-5px;
     margin:8px;
-    border:1px solid #ccc;
+    border:none;
+    /* border:1px solid #ccc; */
 }
 
 .logoutbtn:hover{
     outline: 1px solid aliceblue;
-  border-radius:3px;
+  /* border-radius:3px; */
 }

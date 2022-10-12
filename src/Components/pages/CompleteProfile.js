@@ -4,16 +4,17 @@ import AuthContext from '../../Store/AuthContext'
 import styles from './Cp.module.css'
 import user from '../../images/user1.png';
 import url from '../../images/url.jpg'
-import axios from 'axios';
+
 const CompleteProfile = () => {
   const history= useHistory();
   const authCtx = useContext(AuthContext);
-    
+   const [verified, setVerified]= useState(false); 
   const userMail = localStorage.getItem('userMail')
   const [loggedInUser, setLoggedInUser] = useState('')
   const [updateProfile, setUpdateProfile] = useState(true)
   const [completeProfile, setCompleteProfile] = useState(true)
   const [userPhoto, setUserPhoto] = useState('')
+
 
   useEffect(()=>{
 
@@ -146,7 +147,7 @@ const CompleteProfile = () => {
                     }
                     // alert(errorMessage);
                     // console.log(data);
-                    throw new Error(errorMessage);
+                    throw new Error(errorMessage); 
                   });
                 }
               }).then(data => {
@@ -196,6 +197,7 @@ const CompleteProfile = () => {
           }
         }).then(data => {
           console.log('user  Verfied Mail', data)
+          setVerified(true);
         }).catch(error => {
           console.log(error.message)
         }).catch(error => {
@@ -280,8 +282,9 @@ const CompleteProfile = () => {
           <img src={userPhoto} alt='' style={{width:'100px', height:'80px'}}/>
         </div>
         <div>
-          <button onClick={verifyEmailHandler} className={styles.emailbtn}>Verify Email</button>
+         {verified && <button onClick={verifyEmailHandler} className={styles.emailbtn}>Verify Email</button>}
         </div>
+        {!verified && <p>Your account has been verified</p>}
       </div>}
     </>
   );

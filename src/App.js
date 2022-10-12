@@ -15,21 +15,24 @@ function App() {
   const authCtx = useContext(AuthContext);
   const userLoggedIn = authCtx.isLoggedIn;
   console.log(userLoggedIn);
-  // const storedToken = localStorage.getItem('tokenID')
-  // if(storedToken){
-  //   authCtx.login(storedToken);
-  // }
-  // useEffect(() => {
-  //     // const loggedUser = localStorage.getItem('userMail');
-  //     authCtx.login(storedToken);
-  // },[])
+  const mail = localStorage.getItem('userMail')
+ 
   return (
     <>
     {/* <Signup /> */}
      <Switch>
-      <Route path="/" exact>
+    {!mail && <Route path="/" exact>
         <Signup />
-      </Route>
+      </Route>}
+
+      {mail && <Route path="/" exact>
+        <Header/>
+      </Route>}
+{/* 
+
+      {authCtx.isLoggedIn && <Route path='/'>
+        <Login/>
+      </Route>} */}
       
       <Route path='/Login'>
         <Login/>
@@ -37,7 +40,7 @@ function App() {
 
       <Route path='/Header'><Header /></Route>
 
-      <Route path='/Home'>
+     <Route path='/Home'>
         <Home/>
       </Route>
       {/* <Route path='/Home'><Home/></Route> */}
