@@ -3,26 +3,50 @@ import AuthContext from '../Store/AuthContext';
 import styles from './DailyExpenses.module.css';
 import Nav from '../Components/pages/Nav';
 import axios from 'axios';
-import Expense from '../Components/Modal/Expense';
+import {CSVLink} from 'react-csv'
+
 
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const DailyExpenses = () => {
-
+  const [fetchData, setFetchData] = useState(false);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
-
-
+  const [downloadbtn, setDownloadbtn] = useState(false); 
+  
+  const [items, setItems] = useState([]);
+  const existingItems = [...items];
+  let totalAmount = 0;
+  let[total,setTotal] = useState(0);
   
   const expenseTitleRef = useRef();
   const expenseCategoryRef = useRef();
   const expenseAmountRef = useRef();
 
 
-   const [id, setId] = useState('');
+  const [id, setId] = useState('');
   const [modal, setModal] = useState(false);
-  
+  console.log(modal);
+
+  const headers = [
+    {
+      label: 'Expense Title', key: 'title'
+    },
+    {
+      label : 'Expense Category', key:'category'
+    },
+    {
+      label: 'Amount Spent', key:'amount'
+    }
+  ]
+
+  const csvLink = {
+    filename : 'file.csv',
+    headers: headers,
+    data: items
+
+  }
   const [isEditing, setIsEditing] = useState(false);
   let mail = localStorage.getItem('userMail');
   let usermail;
@@ -39,14 +63,11 @@ const DailyExpenses = () => {
   const authCtx = useContext(AuthContext);
   console.log(authCtx.isLoggedIn);
 
-  const [items, setItems] = useState([]);
-  const existingItems = [...items];
   // const [listKey, setListKey] = useState('[]');
 
   useEffect(() => {
     const arrayOfExpenses = [];
-     
-        axios
+     axios
           .get(
             `https://expensetracker-def96-default-rtdb.firebaseio.com/expenses/${usermail}.json`
           )
@@ -72,18 +93,21 @@ const DailyExpenses = () => {
               });
             });
   
-            // console.log(arrayOfExpenses);
+             console.log(arrayOfExpenses);
             setItems(arrayOfExpenses);
             // console.log('result');
-            
-            
+            for(let i = 0; i < arrayOfExpenses.length;i++){
+              totalAmount = totalAmount + Number( arrayOfExpenses[i].amount)
+            }
+            console.log(totalAmount);
+            setTotal(totalAmount)
           })
           .catch((error) => {
             console.error(error);
           });
     
     
-  }, []);
+  }, [fetchData , modal]);
 /**adding data to form */
   const addExpenseHandler = (e) => {
     e.preventDefault();
@@ -97,7 +121,7 @@ const DailyExpenses = () => {
     };
     console.log(expenseItem);
     saveExpense(expenseItem);
-
+    
     setTitle('');
     setCategory('');
     setAmount('');
@@ -118,6 +142,7 @@ const DailyExpenses = () => {
         existingItems.push(expenseItem);
         setItems(existingItems);
         setModal(false);
+  
       } else {
         alert('failed post request');
       }
@@ -139,6 +164,7 @@ const DailyExpenses = () => {
       response.json().then((response)=>{
         console.log('deleting item');
         setItems(temp.filter((c)=>c.id !== id));
+        setFetchData(true)
       })
     }).catch(err=>{
       alert(err.message)
@@ -153,7 +179,7 @@ const DailyExpenses = () => {
     setAmount(item.amount);
     setCategory(item.category);
     setTitle(item.title)
-
+    setFetchData(true)
   }
 
   const editExpenseHandler = (id) => {
@@ -179,9 +205,11 @@ const DailyExpenses = () => {
       .then((response) => {
         response.json().then((data) => {
           console.log('Editing item', data, id);
+
           setIsEditing(false);
           setModal(false);
-          
+          // setItems(data);
+       //   setFetchData(true)
         });
       })
       .catch((err) => {
@@ -191,11 +219,18 @@ const DailyExpenses = () => {
     setTitle('');
     setCategory('');
     setAmount('');
+    setFetchData(true)
   };
+
+  const activatePremium = (e) => {
+    e.preventDefault()
+    console.log('Activating premium')
+    setDownloadbtn(true)
+  }
   
   return (
     <>
-    <section style={{ display: 'grid', gridTemplateRows: 'repeat(2,1fr)' }}>
+    <section style={{ display: 'grid', gridTemplateRows: 'repeat(1,1fr)' }}>
       <Nav />
 
       <div className={styles.dailyExpenses}>
@@ -210,11 +245,14 @@ const DailyExpenses = () => {
             setModal(true);
              setIsEditing(false)
              }}>
-            Add Expense
+            Add Expense 
           </button>
+          <br></br>
           {items.length !== 0 && (
             <div className={styles.container}>
-              <h3> Added Expenses</h3>
+              <h3> Added Expenses</h3> <br></br>
+              {downloadbtn && <CSVLink {...csvLink} className={styles.downloadbtn}>download Expenses as csv⬇️</CSVLink>}
+              <br></br>
               {items.map((item) => (
                 <li key={Math.random()} id={item.id} className={styles.listItem}>
                   <div className={styles.expenseItem}>
@@ -233,7 +271,13 @@ const DailyExpenses = () => {
                     </span>
                   </div>
                 </li>
+                
               ))}
+              {total<10000 ? <p>Total Amount:{total}</p> : <div className={styles.premium}>
+                <p>Total Amount: {total}</p>
+                <p className={styles.premiumHeading}>Expenses exceeded 10K... Go for premium</p>
+                <button onClick={activatePremium}>Activate Premium</button>
+              </div>}
             </div>
           )}
         </div>
