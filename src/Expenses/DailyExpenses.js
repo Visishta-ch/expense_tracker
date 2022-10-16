@@ -16,8 +16,7 @@ const DailyExpenses = () => {
   const dispatch = useDispatch();
   
   const data = useSelector((state) => state.auth.token)
-  const expenses = useSelector((state) => state.expense)
-  console.log('expenses from slice:', expenses)
+
   console.log('data from Expenseslice',data);
 
   const [fetchData, setFetchData] = useState(false);
@@ -39,7 +38,7 @@ const DailyExpenses = () => {
   // const dispatch = useDispatch();
   const [id, setId] = useState('');
   const [modal, setModal] = useState(false);
-  console.log(modal);
+  // console.log(modal);
 
   const headers = [
     {
@@ -68,7 +67,7 @@ const DailyExpenses = () => {
 
     console.log(usermail);
   }
-  console.log(mail);
+  // console.log(mail);
   const toggle = () => {
     setModal(!modal);
   };

@@ -36,7 +36,7 @@ function App() {
       <Route path='/Header'><Header /></Route>
 
      <Route path='/Home'>
-        <Home/>
+        <Header/>
       </Route>
       {/* <Route path='/Home'><Home/></Route> */}
       <Route path='/CompleteProfile'>

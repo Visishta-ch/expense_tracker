@@ -1,17 +1,18 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import {useDispatch} from 'react-redux';
 import {authActions} from '../Store/auth-slice'
-import AuthContext  from '../Store/AuthContext';
+// import AuthContext  from '../Store/AuthContext';
 import {Link,useHistory} from 'react-router-dom'
 import styles from './Login.module.css';
 
 const Login = () => {
 
-    const authCtx = useContext(AuthContext);
+    // const authCtx = useContext(AuthContext);
     const history = useHistory()
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
-  const [error, setError] = useState(false);
+  // const [error, setError] = useState(false);
+  const error = false;
   const [isLoading, setIsLoading] = useState(false);
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
@@ -33,8 +34,8 @@ const Login = () => {
   const submitLoginHandler = (e) => {
     e.preventDefault();
     const userMail = emailInputRef.current.value;
-    authCtx.userMail(userMail);
-    localStorage.setItem('userMail', userMail);
+    // authCtx.userMail(userMail);
+    // localStorage.setItem('userMail', userMail);
     const password = passwordInputRef.current.value;
     console.log('login detail', userMail, password);
 

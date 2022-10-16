@@ -23,13 +23,13 @@ const CompleteProfile = () => {
   const [completeProfile, setCompleteProfile] = useState(true)
   const [userPhoto, setUserPhoto] = useState('')
 
-  const Token = localStorage.getItem('tokenID')
+  // const Token = localStorage.getItem('tokenID')
   useEffect(()=>{
 
     fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDS8nnD8MqJp08t46JCFNAEM-mnC_hRgHM',{
       method: 'POST',
       body: JSON.stringify({
-          idToken:Token,
+          idToken:userToken,
           
 
       }),
@@ -73,8 +73,8 @@ const CompleteProfile = () => {
   },[])
   
        
-    const token= authCtx.token;
-    console.log(token);
+    // const token= authCtx.token;
+    // console.log(token);
     const userNameref= useRef();
     const userPicref = useRef();
 
@@ -97,7 +97,7 @@ const CompleteProfile = () => {
                 {
                     method: 'POST',
                     body: JSON.stringify({
-                        idToken:token,
+                        idToken:userToken,
                         displayName:userName,
                         photoUrl:userPic,
                         // deleteAttribute:DISPLAY_NAME,
@@ -134,7 +134,7 @@ const CompleteProfile = () => {
             {
                 method: 'POST',
                 body: JSON.stringify({
-                    idToken:token,
+                    idToken:userToken,
                     
         
                 }),
@@ -185,7 +185,7 @@ const CompleteProfile = () => {
           method: 'POST',
           body: JSON.stringify({
             requestType:"VERIFY_EMAIL",
-            idToken:token
+            idToken:userToken
           })
         }).then(response =>{
           if(response.ok){
@@ -207,6 +207,7 @@ const CompleteProfile = () => {
         }).then(data => {
           console.log('user  Verfied Mail', data)
           setVerified(true);
+          
         }).catch(error => {
           console.log(error.message)
         }).catch(error => {

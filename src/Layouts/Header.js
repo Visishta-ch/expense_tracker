@@ -1,11 +1,15 @@
 import React, { useContext } from 'react';
 import AuthContext from '../Store/AuthContext';
+import {useDispatch} from 'react-redux';
+import {authActions} from '../Store/auth-slice';
+
 // import Login from '../Layouts/Login'
 import { NavLink,useHistory } from 'react-router-dom';
 
 import styles from './Header.module.css'
 
 const Header = () => {
+  const dispatch = useDispatch();
  
 const history = useHistory();
   const userMailId = localStorage.getItem('userMail');
@@ -13,7 +17,8 @@ const history = useHistory();
   const logoutHandler=()=>{
     localStorage.removeItem('userMail')
     localStorage.removeItem('isLoggedIn')
-    authCtx.logout();
+    // authCtx.logout();
+    dispatch(authActions.logout());
     history.replace('/Login')
   }
   return (
@@ -24,7 +29,7 @@ const history = useHistory();
 
         <div className={styles.navbar}>
           <NavLink
-            to="/Home"
+            to="/Header"
             style={{
               padding: '10px',
               margin: '10px',
