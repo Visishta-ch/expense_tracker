@@ -1,18 +1,26 @@
-import React,{useContext, useState} from 'react';
+import React ,{useContext} from 'react';
+import {useDispatch, useSelector} from 'react-redux'
+import { authActions } from '../../Store/auth-slice';
 import styles from './Home.module.css';
 import {useHistory, Link} from 'react-router-dom'
-import AuthContext from '../../Store/AuthContext'
-// import DailyExpenses from '../../Expenses/DailyExpenses'
+ import AuthContext from '../../Store/AuthContext'
+
 const Home = () => {
-    const authCtx = useContext(AuthContext)
+    const dispatch = useDispatch();
+    // const isLoginIn = useSelector ((state) => state.auth.isLoggedIn)
+
+    const isLoginIn = localStorage.getItem('isLoggedIn')
+    console.log('isLoginIn from authSlice', isLoginIn) 
   
     const userMail = localStorage.getItem('userMail')
-   
+    const authCtx = useContext(AuthContext)
     const history = useHistory();
  
     const logoutHandler=()=>{
       localStorage.removeItem('userMail')
-      authCtx.logout();
+      localStorage.removeItem('isLoggedIn')
+      // authCtx.logout();
+      dispatch(authActions.logout());                     
       history.replace('/Login')
     }
   return (
@@ -23,6 +31,7 @@ const Home = () => {
         </h1>
         <p className={styles.text}>Your Profile is Incomplete <Link to='/CompleteProfile' style={{padding:'3px',border: 'none', background:'none', color:'red'}}> Complete your Profile</Link></p>
         {authCtx.login && <span style={{color:'black'}}>{userMail}</span>}
+        {/* {!isLoginIn && <span style={{color:'black'}}>{userMail}</span>} */}
         <button className={styles.logoutbtn} onClick={logoutHandler}>LOGOUT</button>
       </header>
       

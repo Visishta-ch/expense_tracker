@@ -1,4 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
+import {useDispatch} from 'react-redux';
+import {authActions} from '../Store/auth-slice'
 import AuthContext  from '../Store/AuthContext';
 import {Link,useHistory} from 'react-router-dom'
 import styles from './Login.module.css';
@@ -7,7 +9,7 @@ const Login = () => {
 
     const authCtx = useContext(AuthContext);
     const history = useHistory()
-
+  const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +18,8 @@ const Login = () => {
   const storedToken = localStorage.getItem('tokenID')
   useEffect(() => {
       // const loggedUser = localStorage.getItem('userMail');
-      authCtx.login(storedToken);
+     // authCtx.login(storedToken);
+     dispatch(authActions.login(storedToken))
   },[])
 
   const switchAuthModeHandler = () => {
@@ -64,9 +67,10 @@ const Login = () => {
           });
         }
       }).then(data => {
-        console.log('Signup is successful',data.idToken);
+        console.log('login is successful', data.idToken);
         // authCtx.login(data.idToken)
-        authCtx.login(data.idToken)
+        // authCtx.login(data.idToken)
+        dispatch(authActions.login(data.idToken))
         history.push('/Header')
 
       }).catch(err => {

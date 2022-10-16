@@ -1,4 +1,6 @@
 import React,{ useRef,useState, useContext, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux'
+import { authActions } from '../../Store/auth-slice';
 import {useHistory,} from 'react-router-dom'
 import AuthContext from '../../Store/AuthContext'
 import styles from './Cp.module.css'
@@ -6,22 +8,28 @@ import user from '../../images/user1.png';
 import url from '../../images/url.jpg'
 
 const CompleteProfile = () => {
+  const userToken = useSelector(state => state.auth.token) 
+  const isLoggedIn = useSelector(state => state.auth.IsLoggedIn)
+  console.log(isLoggedIn)
+  console.log(userToken)
+  const dispatch = useDispatch();
   const history= useHistory();
   const authCtx = useContext(AuthContext);
    const [verified, setVerified]= useState(false); 
+   const [mail,setMail] = useState('')
   const userMail = localStorage.getItem('userMail')
   const [loggedInUser, setLoggedInUser] = useState('')
   const [updateProfile, setUpdateProfile] = useState(true)
   const [completeProfile, setCompleteProfile] = useState(true)
   const [userPhoto, setUserPhoto] = useState('')
 
-
+  const Token = localStorage.getItem('tokenID')
   useEffect(()=>{
 
     fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDS8nnD8MqJp08t46JCFNAEM-mnC_hRgHM',{
       method: 'POST',
       body: JSON.stringify({
-          idToken:token,
+          idToken:Token,
           
 
       }),
@@ -46,7 +54,7 @@ const CompleteProfile = () => {
       }
     }).then(data => {
       console.log('fetched data',data.users[0].displayName);
-      // authCtx.login(data.idToken)
+      
       let userName = data.users[0].displayName;
       let userProfilePic = data.users[0].photoUrl;
       setLoggedInUser(userName)
@@ -73,6 +81,7 @@ const CompleteProfile = () => {
     const editHandler = ()=> {
       setUpdateProfile(true);
       // userNameref.current.value= loggedInUser;
+      
     }
 
 
@@ -204,9 +213,12 @@ const CompleteProfile = () => {
           console.log(error.message)
         })
       }
+
       const logoutHandler=()=>{
         localStorage.removeItem('userMail')
-        authCtx.logout();
+        localStorage.removeItem('isLoggedIn')
+        // authCtx.logout();
+        dispatch(authActions.logout());
         history.replace('/Login')
       }
 
@@ -239,11 +251,11 @@ const CompleteProfile = () => {
             Complete your Profile
           </button>
         </p>}
-        {!completeProfile && <p className={styles.text}>
-          Your Profile is Updated
+        {!completeProfile && <>
+    
         
-        <button onClick={editHandler} style={{ padding: '3px', border: 'none', background: 'none' }}>Edit Details</button>
-        </p>
+        <button onClick={editHandler} style={{ padding: '3px', border: 'none', background: '#cfcfcf', borderRadius:'10px',height:'28px', width:'145px' }}>Edit Details</button>
+        </>
         }
         {authCtx.isLoggedIn && <caption style={{color:'Purple'}}>{userMail}</caption>}
         <button className={styles.logoutbtn} onClick={logoutHandler}>LOGOUT</button>
@@ -261,7 +273,7 @@ const CompleteProfile = () => {
         <div style={{ display:'flex', flexDirection: 'row' }}>
         <img src={user} alt=''  style={{width:'25px', height:'25px'}}/>
           <label>Full Name</label>       
-          <input type='text'  placeholder='Full Name' name='fullName'  ref={userNameref}/>
+          <input type='text'  placeholder='Full Name' name='fullName'  ref={userNameref} value={mail} onChange={(e)=> {setMail(e.target.value)}}/>
         </div>
         <div style={{ display:'flex', flexDirection: 'row' }}>
           <img src={url} alt='' style={{width:'25px', height:'25px'}}/>
@@ -284,7 +296,7 @@ const CompleteProfile = () => {
         <div>
          {verified && <button onClick={verifyEmailHandler} className={styles.emailbtn}>Verify Email</button>}
         </div>
-        {!verified && <p>Your account has been verified</p>}
+        {!verified && <button className={styles.verified}>Your account has been verified</button>}
       </div>}
     </>
   );

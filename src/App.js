@@ -7,14 +7,14 @@ import Home from './Components/pages/Home'
 import CompleteProfile from './Components/pages/CompleteProfile'
 import GetFPLink from './Layouts/GetFPLink'
 import Header from './Layouts/Header'
-import AuthContext from './Store/AuthContext'
+// import AuthContext from './Store/AuthContext'
 import DailyExpenses from './Expenses/DailyExpenses'
 import './App.css';
 
 function App() {
-  const authCtx = useContext(AuthContext);
-  const userLoggedIn = authCtx.isLoggedIn;
-  console.log(userLoggedIn);
+  // const authCtx = useContext(AuthContext);
+  // const userLoggedIn = authCtx.isLoggedIn;
+  // console.log(userLoggedIn);
   const mail = localStorage.getItem('userMail')
  
   return (
@@ -28,12 +28,7 @@ function App() {
       {mail && <Route path="/" exact>
         <Header/>
       </Route>}
-{/* 
 
-      {authCtx.isLoggedIn && <Route path='/'>
-        <Login/>
-      </Route>} */}
-      
       <Route path='/Login'>
         <Login/>
       </Route>

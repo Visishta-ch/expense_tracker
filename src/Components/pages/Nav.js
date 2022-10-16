@@ -8,6 +8,7 @@ const Nav = () => {
     const authCtx = useContext(AuthContext);
     const logoutHandler=()=>{
         localStorage.removeItem('userMail')
+        localStorage.removeItem('isLoggedIn')
         authCtx.logout();
         history.replace('/Login')
       }

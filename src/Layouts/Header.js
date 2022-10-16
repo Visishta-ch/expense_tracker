@@ -12,6 +12,7 @@ const history = useHistory();
   const authCtx = useContext(AuthContext);
   const logoutHandler=()=>{
     localStorage.removeItem('userMail')
+    localStorage.removeItem('isLoggedIn')
     authCtx.logout();
     history.replace('/Login')
   }
@@ -45,18 +46,7 @@ const history = useHistory();
           >
             DAILY EXPENSES
           </NavLink>
-          <NavLink
-            to="/About"
-            style={{
-              padding: '10px',
-              margin: '10px',
-              textDecoration: 'none',
-              color: 'white',
-            }}
-            className="nav-about"
-          >
-            ABOUT{' '}
-          </NavLink>
+          
           <NavLink
             to="/CompleteProfile"
             style={{

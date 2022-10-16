@@ -1,15 +1,27 @@
-import React, { useState,useRef, useEffect, useContext} from 'react';
-import AuthContext from '../Store/AuthContext';
+import React, { useState,useRef, useEffect } from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {expenseActions} from '../Store/expense-slice';
+// import {themeActions} from '../Store/theme-slice'
+// import AuthContext from '../Store/AuthContext';
 import styles from './DailyExpenses.module.css';
 import Nav from '../Components/pages/Nav';
 import axios from 'axios';
-import {CSVLink} from 'react-csv'
+import {CSVLink} from 'react-csv';
+import useLocalStorage from 'use-local-storage';
 
 
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const DailyExpenses = () => {
+  const dispatch = useDispatch();
+  
+  const data = useSelector((state) => state.auth.token)
+  const expenses = useSelector((state) => state.expense)
+  console.log('expenses from slice:', expenses)
+  console.log('data from Expenseslice',data);
+
   const [fetchData, setFetchData] = useState(false);
+  const [theme, setTheme] = useLocalStorage('theme'?'dark':'light')
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
@@ -24,7 +36,7 @@ const DailyExpenses = () => {
   const expenseCategoryRef = useRef();
   const expenseAmountRef = useRef();
 
-
+  // const dispatch = useDispatch();
   const [id, setId] = useState('');
   const [modal, setModal] = useState(false);
   console.log(modal);
@@ -60,31 +72,27 @@ const DailyExpenses = () => {
   const toggle = () => {
     setModal(!modal);
   };
-  const authCtx = useContext(AuthContext);
-  console.log(authCtx.isLoggedIn);
+  // const authCtx = useContext(AuthContext);
+  // console.log(authCtx.isLoggedIn);
 
-  // const [listKey, setListKey] = useState('[]');
+ let result  //to store the total expenses
+  
 
   useEffect(() => {
     const arrayOfExpenses = [];
-     axios
+    axios
           .get(
             `https://expensetracker-def96-default-rtdb.firebaseio.com/expenses/${usermail}.json`
           )
           .then((response) => {
-            console.log(response.data);
-  
-            const result = response.data;
+            // console.log(response.data);
+            
+            result = response.data;
+            // console.log(result)
             let keys = Object.keys(result)
-            console.log("keys", keys)
-            console.log(result);
+            // console.log("keys", keys)
+            // console.log(result);
             Object.entries(result).forEach((item) => {
-              // console.log('item :',item[1].title,item[1].category,item[1].amount);
-    
-              // console.log(id);
-              //  console.log(item[0])
-                     
-              // console.log(item[1]);
               arrayOfExpenses.push({
                 title: item[1].title,
                 amount: item[1].amount,
@@ -92,14 +100,15 @@ const DailyExpenses = () => {
                 id: item[0]
               });
             });
-  
-             console.log(arrayOfExpenses);
+            
+            // console.log(arrayOfExpenses);
             setItems(arrayOfExpenses);
-            // console.log('result');
-            for(let i = 0; i < arrayOfExpenses.length;i++){
+            dispatch(expenseActions.saveExpenses(result))
+            console.log('dispatch success')
+            for(let i = 0; i < arrayOfExpenses.length; i++){
               totalAmount = totalAmount + Number( arrayOfExpenses[i].amount)
             }
-            console.log(totalAmount);
+            // console.log(totalAmount);
             setTotal(totalAmount)
           })
           .catch((error) => {
@@ -130,6 +139,7 @@ const DailyExpenses = () => {
 
   /*adding items to backend */
   async function saveExpense(expenseItem) {
+    console.log(expenseItem);
     try {
       const response = await axios.post(
         `https://expensetracker-def96-default-rtdb.firebaseio.com/expenses/${usermail}.json`,
@@ -142,7 +152,7 @@ const DailyExpenses = () => {
         existingItems.push(expenseItem);
         setItems(existingItems);
         setModal(false);
-  
+        // dispatch(expenseActions.saveExpenses(expenseItem))
       } else {
         alert('failed post request');
       }
@@ -163,7 +173,10 @@ const DailyExpenses = () => {
     }).then((response) => {
       response.json().then((response)=>{
         console.log('deleting item');
+        
+        // setTotal(totalAmount);
         setItems(temp.filter((c)=>c.id !== id));
+        
         setFetchData(true)
       })
     }).catch(err=>{
@@ -225,12 +238,15 @@ const DailyExpenses = () => {
   const activatePremium = (e) => {
     e.preventDefault()
     console.log('Activating premium')
+    const newTheme = theme === 'light'? 'dark' : 'light';
+    // dispatch(themeActions.changeTheme());
     setDownloadbtn(true)
+    setTheme(newTheme);
   }
   
   return (
     <>
-    <section style={{ display: 'grid', gridTemplateRows: 'repeat(1,1fr)' }}>
+    <section className={styles.main} >
       <Nav />
 
       <div className={styles.dailyExpenses}>
@@ -251,14 +267,14 @@ const DailyExpenses = () => {
           {items.length !== 0 && (
             <div className={styles.container}>
               <h3> Added Expenses</h3> <br></br>
-              {downloadbtn && <CSVLink {...csvLink} className={styles.downloadbtn}>download Expenses as csv⬇️</CSVLink>}
+              {downloadbtn && <CSVLink {...csvLink} className={styles.downloadbtn}>download Expenses as csv <span>⬇️</span></CSVLink>}
               <br></br>
               {items.map((item) => (
                 <li key={Math.random()} id={item.id} className={styles.listItem}>
                   <div className={styles.expenseItem}>
                     <span>{item.title} </span>
                     <span>{item.category} </span>
-                    <span>{item.amount}</span>
+                    <span >{item.amount}</span>
                     <span>
                       {' '}
                       <button
@@ -353,4 +369,7 @@ const DailyExpenses = () => {
   );
 };
 
+
+
 export default DailyExpenses;
+
