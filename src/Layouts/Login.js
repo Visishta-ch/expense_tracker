@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {useDispatch} from 'react-redux';
 import {authActions} from '../Store/auth-slice'
 // import AuthContext  from '../Store/AuthContext';
@@ -8,7 +8,7 @@ import styles from './Login.module.css';
 const Login = () => {
 
     // const authCtx = useContext(AuthContext);
-    const history = useHistory()
+  const history = useHistory()
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   // const [error, setError] = useState(false);
@@ -18,8 +18,8 @@ const Login = () => {
   const passwordInputRef = useRef();
   const storedToken = localStorage.getItem('tokenID')
   useEffect(() => {
-      // const loggedUser = localStorage.getItem('userMail');
-     // authCtx.login(storedToken);
+      //  const loggedUser = localStorage.getItem('userMail');
+      // authCtx.login(storedToken);
      dispatch(authActions.login(storedToken))
   },[])
 
@@ -35,7 +35,7 @@ const Login = () => {
     e.preventDefault();
     const userMail = emailInputRef.current.value;
     // authCtx.userMail(userMail);
-    // localStorage.setItem('userMail', userMail);
+     localStorage.setItem('userMail', userMail);
     const password = passwordInputRef.current.value;
     console.log('login detail', userMail, password);
 

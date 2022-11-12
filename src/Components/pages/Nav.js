@@ -43,7 +43,7 @@ const Nav = () => {
           >
             DAILY EXPENSES
           </NavLink>
-          
+        
           <NavLink
             to="/CompleteProfile"
             style={{
@@ -56,6 +56,7 @@ const Nav = () => {
           >
             PROFILE
           </NavLink>
+          
         </div>
         <div
           style={{
@@ -68,14 +69,7 @@ const Nav = () => {
          
           <button
             to="/Login"
-            style={{
-              textDecoration: 'none',
-              color: 'white',
-              position: 'relative',
-              margin: '8px',
-
-              background: 'none',
-            }}
+        
             onClick={logoutHandler}
             className={styles.logoutbtn}
           >

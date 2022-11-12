@@ -1,22 +1,23 @@
 
-[data-theme='dark'] {
-    background: rgb(84, 82, 82);
-    color: rgb(175, 186, 16);
-    /* --text-secondary: #8e05c2;
-    --accent: #8e05c2;
-    --border: #808080;
-    --form-bg: #191919; */
-  }
+  .theme {
+    background: #151B54;
+    color: mediumturquoise;
+    font-family: monospace;
 
-.dailyExpenses{
+  }
+  /* .theme span{ */
+    /* color: white;
+  } */
+  /* .span{
+    text-decoration-color:white;
+  } */
+.dailyExpenses{ 
     padding: 10px;
     display:grid;
     grid-template-columns: repeat(3, 1fr);
     position: relative;
     top: 73px;
     place-items: center;
-   
-    margin: 10px;
     
 }
 .container{
@@ -110,10 +111,14 @@
     width:450px;
     height:50px;
     border-radius:10px;
-    /* background-color: #79b3f4;  */
+    background-color: #971581;
     color: white;
     font-family: 'Times New Roman', Times, serif;
     border: 1px solid #79b3f4;
+}
+
+.spanItem{
+    color: white;
 }
 .listItem{
     list-style: none;
@@ -128,9 +133,9 @@
 }
 
 .listItem span{
-    font-family: sans-serif;
+    font-family: emoji;
     font-size:20px;
-    color: black;
+    color:goldenrod;
     padding:5px;
    
 }

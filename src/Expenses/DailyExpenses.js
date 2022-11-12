@@ -1,8 +1,7 @@
 import React, { useState,useRef, useEffect } from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {expenseActions} from '../Store/expense-slice';
-// import {themeActions} from '../Store/theme-slice'
-// import AuthContext from '../Store/AuthContext';
+import {useHistory} from 'react-router-dom'
 import styles from './DailyExpenses.module.css';
 import Nav from '../Components/pages/Nav';
 import axios from 'axios';
@@ -14,11 +13,6 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const DailyExpenses = () => {
   const dispatch = useDispatch();
-  
-  const data = useSelector((state) => state.auth.token)
-
-  console.log('data from Expenseslice',data);
-
   const [fetchData, setFetchData] = useState(false);
   const [theme, setTheme] = useLocalStorage('theme'?'dark':'light')
   const [category, setCategory] = useState('');
@@ -65,18 +59,26 @@ const DailyExpenses = () => {
     const regex = /[`@.`]/g;
     usermail = mail.replace(regex, '');
 
-    console.log(usermail);
+    // console.log(usermail);
   }
   // console.log(mail);
   const toggle = () => {
     setModal(!modal);
   };
-  // const authCtx = useContext(AuthContext);
-  // console.log(authCtx.isLoggedIn);
+ 
+  const history = useHistory();
+  const userMailId = localStorage.getItem('userMail');
+  useEffect(() => {
+      if(!userMailId) {
+        history.push('/Login')
+      }
+    
+  },[])
+
 
  let result  //to store the total expenses
   
-
+console.log('userMail', usermail)
   useEffect(() => {
     const arrayOfExpenses = [];
     axios
@@ -84,11 +86,11 @@ const DailyExpenses = () => {
             `https://expensetracker-def96-default-rtdb.firebaseio.com/expenses/${usermail}.json`
           )
           .then((response) => {
-            // console.log(response.data);
+           console.log(response.data);
             
             result = response.data;
             // console.log(result)
-            let keys = Object.keys(result)
+            // let keys = Object.keys(result)
             // console.log("keys", keys)
             // console.log(result);
             Object.entries(result).forEach((item) => {
@@ -103,12 +105,13 @@ const DailyExpenses = () => {
             // console.log(arrayOfExpenses);
             setItems(arrayOfExpenses);
             dispatch(expenseActions.saveExpenses(result))
-            console.log('dispatch success')
+           // console.log('dispatch success')
             for(let i = 0; i < arrayOfExpenses.length; i++){
               totalAmount = totalAmount + Number( arrayOfExpenses[i].amount)
             }
             // console.log(totalAmount);
             setTotal(totalAmount)
+            setFetchData(false)
           })
           .catch((error) => {
             console.error(error);
@@ -127,7 +130,7 @@ const DailyExpenses = () => {
       category,
       amount,
     };
-    console.log(expenseItem);
+   
     saveExpense(expenseItem);
     
     setTitle('');
@@ -138,20 +141,19 @@ const DailyExpenses = () => {
 
   /*adding items to backend */
   async function saveExpense(expenseItem) {
-    console.log(expenseItem);
+    // console.log(expenseItem);
     try {
       const response = await axios.post(
         `https://expensetracker-def96-default-rtdb.firebaseio.com/expenses/${usermail}.json`,
         expenseItem
       );
       if (response.status === 200) {
-        console.log('posted items successfully', response.data.name); //id
-        console.log(response);
-      //  setListKey(response.data.name); /**  id */
+        console.log('posted items successfully', response.data.name); 
+        console.log('updated items successfully', response)
         existingItems.push(expenseItem);
         setItems(existingItems);
         setModal(false);
-        // dispatch(expenseActions.saveExpenses(expenseItem))
+        
       } else {
         alert('failed post request');
       }
@@ -163,7 +165,7 @@ const DailyExpenses = () => {
 
 
   function deleteExpense(id){
-    const temp = [...items];
+    // const temp = [...items];
 
     console.log('delete', id);
     fetch(`https://expensetracker-def96-default-rtdb.firebaseio.com/expenses/${usermail}/${id}.json`,
@@ -172,9 +174,7 @@ const DailyExpenses = () => {
     }).then((response) => {
       response.json().then((response)=>{
         console.log('deleting item');
-        
-        // setTotal(totalAmount);
-        setItems(temp.filter((c)=>c.id !== id));
+           
         
         setFetchData(true)
       })
@@ -184,18 +184,18 @@ const DailyExpenses = () => {
   }
 
   const expenseEdit= (item)=> {
-    console.log('edit', item);
+    
     setModal(true);
     setIsEditing(true);
     setId(item.id);
     setAmount(item.amount);
     setCategory(item.category);
     setTitle(item.title)
-    setFetchData(true)
+
   }
 
   const editExpenseHandler = (id) => {
-    console.log('editing Id', id);
+    // console.log('editing Id', id);
     const title = expenseTitleRef.current.value;
     const category = expenseCategoryRef.current.value;
     const amount = expenseAmountRef.current.value;
@@ -216,12 +216,11 @@ const DailyExpenses = () => {
     )
       .then((response) => {
         response.json().then((data) => {
-          console.log('Editing item', data, id);
+          // console.log('Editing item', data, id);
 
           setIsEditing(false);
           setModal(false);
-          // setItems(data);
-       //   setFetchData(true)
+       
         });
       })
       .catch((err) => {
@@ -237,18 +236,18 @@ const DailyExpenses = () => {
   const activatePremium = (e) => {
     e.preventDefault()
     console.log('Activating premium')
-    const newTheme = theme === 'light'? 'dark' : 'light';
-    // dispatch(themeActions.changeTheme());
+    
     setDownloadbtn(true)
-    setTheme(newTheme);
+  
   }
   
   return (
     <>
-    <section className={styles.main} >
+    <section className={`${styles.main} ${total>10000 && styles.theme}`} >
+  
       <Nav />
 
-      <div className={styles.dailyExpenses}>
+      <div className={`${styles.dailyExpenses}  ${total>10000 && styles.theme}`}>
         <div></div>
         <div className={styles.container}>
           <h2 style={{ letterSpacing: '2px', fontSize: '27px' }}>
@@ -271,9 +270,9 @@ const DailyExpenses = () => {
               {items.map((item) => (
                 <li key={Math.random()} id={item.id} className={styles.listItem}>
                   <div className={styles.expenseItem}>
-                    <span>{item.title} </span>
-                    <span>{item.category} </span>
-                    <span >{item.amount}</span>
+                    <span className={styles.spanItem}>{item.title} </span>
+                    <span className={styles.spanItem}>{item.category} </span>
+                    <span className={styles.spanItem}>{item.amount}</span>
                     <span>
                       {' '}
                       <button
@@ -291,17 +290,18 @@ const DailyExpenses = () => {
               {total<10000 ? <p>Total Amount:{total}</p> : <div className={styles.premium}>
                 <p>Total Amount: {total}</p>
                 <p className={styles.premiumHeading}>Expenses exceeded 10K... Go for premium</p>
-                <button onClick={activatePremium}>Activate Premium</button>
+                <button onClick={activatePremium} styles={{borderRadius:'5px'}}>Activate Premium</button>
               </div>}
             </div>
           )}
         </div>
 
-        <div></div>
+        {/* <div></div> */}
       </div>
       {/* <Expense toggle={toggle} modal={modal} addItem={saveExpense} items={items} expenseEdit={expenseEdit}  edit={isEditing}  editItemID={id} editItem={editExpense}/> */}
     </section>
-    <div>
+  
+    <div className={`${total>10000 && styles.theme}`}>
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>Add Daily Expenses</ModalHeader>
         <ModalBody>

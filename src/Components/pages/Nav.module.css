@@ -36,19 +36,30 @@ nav{
     font-weight: bold;
 }
 
+
+
 .logoutbtn{
     font-family: 'Courier New', Courier, monospace;
     font-size: 20px;
+    position: relative;
     letter-spacing:3.5px;
     font-weight: bold;
-    padding:8px;
-    top:-5px;
+   background:none;
+   text-decoration: none;
+    top:-1px;
     margin:8px;
     border:none;
+    color: white
     /* border:1px solid #ccc; */
 }
 
 .logoutbtn:hover{
     outline: 1px solid aliceblue;
   /* border-radius:3px; */
+}
+
+@media only screen and (max-width: 600px) {
+  .navbar {
+    background-color: lightblue;
+  }
 }

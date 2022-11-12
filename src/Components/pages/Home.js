@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from '../../Store/auth-slice';
 import styles from './Home.module.css';
-import { useHistory, Link } from 'react-router-dom';
-import AuthContext from '../../Store/AuthContext';
+import { useHistory,  } from 'react-router-dom';
+// import AuthContext from '../../Store/AuthContext';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -13,7 +13,7 @@ const Home = () => {
   console.log('isLoginIn from authSlice', isLoginIn);
 
   const userMail = localStorage.getItem('userMail');
-  const authCtx = useContext(AuthContext);
+  // const authCtx = useContext(AuthContext);
   const history = useHistory();
 
   const logoutHandler = () => {
@@ -42,23 +42,9 @@ const Home = () => {
         >
           Welcome to Expense Tracker !!!
         </h1>
-        {/* <p className={styles.text}>
-          Your Profile is Incomplete{' '}
-          <Link
-            to="/CompleteProfile"
-            style={{
-              padding: '3px',
-              border: 'none',
-              background: 'none',
-              color: 'red',
-            }}
-          >
-            {' '}
-            Complete your Profile
-          </Link>
-        </p> */}
-        {authCtx.login && <span style={{ color: 'black' }}>{userMail}</span>}
-        {/* {!isLoginIn && <span style={{color:'black'}}>{userMail}</span>} */}
+     
+       
+        {userMail && <span style={{color:'black'}}>{userMail}</span>}
         <button className={styles.logoutbtn} onClick={logoutHandler}>
           LOGOUT
         </button>

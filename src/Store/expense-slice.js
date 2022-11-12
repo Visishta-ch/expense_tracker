@@ -9,15 +9,16 @@ const expensesSlice = createSlice({
     initialState:initialExpenses,
     reducers:{
         saveExpenses(state,action){
-            console.log('saving items to redux store')
-            state.items = [...state.items, action.payload]
-    
-            console.log('adding items to slice')
-        }
+            // console.log('saving items to redux store')
+            // state.items = [...state.items, action.payload]
+            state.items = action.payload
+            // console.log('adding items to slice')
+        },
+      
     
     }
 })
 
 export const expenseActions = expensesSlice.actions;
 
-export default expensesSlice;
+export default expensesSlice.reducer;

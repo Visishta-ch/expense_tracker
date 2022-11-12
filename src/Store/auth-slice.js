@@ -6,7 +6,7 @@ const initialAuthStatus={
     token:localStorage.getItem('tokenID'),
     isLoggedIn: localStorage.getItem('isLoggedIn')
 }
-console.log('token from slice', initialAuthStatus.token)
+// console.log('token from slice', initialAuthStatus.token)
 const authSlice = createSlice({
     name:'auth',
     initialState: initialAuthStatus,
@@ -21,7 +21,8 @@ const authSlice = createSlice({
             state.isLoggedIn= false,
             localStorage.removeItem('tokenID')
             localStorage.removeItem('isLoggedIn')
-        }
+        },
+        
 
 
     },

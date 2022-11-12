@@ -1,10 +1,8 @@
-import React, { useContext } from 'react';
-import AuthContext from '../Store/AuthContext';
+import React, {  useEffect} from 'react';
+// import AuthContext from '../Store/AuthContext';
 import {useDispatch} from 'react-redux';
 import {authActions} from '../Store/auth-slice';
-
-// import Login from '../Layouts/Login'
-import { NavLink,useHistory } from 'react-router-dom';
+import { NavLink,useHistory} from 'react-router-dom';
 
 import styles from './Header.module.css'
 
@@ -13,7 +11,13 @@ const Header = () => {
  
 const history = useHistory();
   const userMailId = localStorage.getItem('userMail');
-  const authCtx = useContext(AuthContext);
+  useEffect(() => {
+      if(!userMailId) {
+        history.push('/Login')
+      }
+    
+  },[])
+  // const authCtx = useContext(AuthContext);
   const logoutHandler=()=>{
     localStorage.removeItem('userMail')
     localStorage.removeItem('isLoggedIn')
@@ -64,6 +68,20 @@ const history = useHistory();
           >
             PROFILE
           </NavLink>
+          {/* <Route path="/Header/CompleteProfile">
+          <NavLink
+            to="/CompleteProfile"
+            style={{
+              padding: '10px',
+              margin: '10px',
+              textDecoration: 'none',
+              color: 'white',
+            }}
+            className="nav-about"
+          >
+            PROFILE
+          </NavLink>
+          </Route> */}
         </div>
         <div
           style={{
@@ -104,7 +122,7 @@ const history = useHistory();
       </div>
       <div>
         <div className={styles.login}>
-        {authCtx.login && (
+        {userMailId && (
             <>
 
               <span  style={{

@@ -1,35 +1,45 @@
-import React,{ useRef,useState, useContext, useEffect} from 'react';
+import React,{ useRef,useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux'
 import { authActions } from '../../Store/auth-slice';
 import {useHistory,} from 'react-router-dom'
-import AuthContext from '../../Store/AuthContext'
+// import AuthContext from '../../Store/AuthContext'
 import styles from './Cp.module.css'
 import user from '../../images/user1.png';
 import url from '../../images/url.jpg'
 
 const CompleteProfile = () => {
   const userToken = useSelector(state => state.auth.token) 
-  const isLoggedIn = useSelector(state => state.auth.IsLoggedIn)
-  console.log(isLoggedIn)
-  console.log(userToken)
+  // const isLoggedIn = useSelector(state => state.auth.IsLoggedIn)
+  // console.log(isLoggedIn)
+  console.log('usertoken',userToken)
   const dispatch = useDispatch();
   const history= useHistory();
-  const authCtx = useContext(AuthContext);
+  // const authCtx = useContext(AuthContext);
    const [verified, setVerified]= useState(false); 
    const [mail,setMail] = useState('')
+   const [imgUrl, setImgUrl ] = useState('')
   const userMail = localStorage.getItem('userMail')
   const [loggedInUser, setLoggedInUser] = useState('')
   const [updateProfile, setUpdateProfile] = useState(true)
   const [completeProfile, setCompleteProfile] = useState(true)
   const [userPhoto, setUserPhoto] = useState('')
 
-  // const Token = localStorage.getItem('tokenID')
+   const Token = localStorage.getItem('tokenID')
+
+
+  const userMailId = localStorage.getItem('userMail');
+  useEffect(() => {
+      if(!userMailId) {
+        history.push('/Login')
+      }
+    
+  },[])
   useEffect(()=>{
 
     fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDS8nnD8MqJp08t46JCFNAEM-mnC_hRgHM',{
       method: 'POST',
       body: JSON.stringify({
-          idToken:userToken,
+          idToken:Token,
           
 
       }),
@@ -53,7 +63,7 @@ const CompleteProfile = () => {
         });
       }
     }).then(data => {
-      console.log('fetched data',data.users[0].displayName);
+      // console.log('fetched data',data.users[0].displayName);
       
       let userName = data.users[0].displayName;
       let userProfilePic = data.users[0].photoUrl;
@@ -78,9 +88,9 @@ const CompleteProfile = () => {
     const userNameref= useRef();
     const userPicref = useRef();
 
-    const editHandler = ()=> {
+    const editHandler = (item)=> {
       setUpdateProfile(true);
-      // userNameref.current.value= loggedInUser;
+      
       
     }
 
@@ -93,11 +103,12 @@ const CompleteProfile = () => {
             const userPic = userPicref.current.value;
 
             if(userName !== '' || userPic !== ''){
+            
                 fetch( 'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDS8nnD8MqJp08t46JCFNAEM-mnC_hRgHM',
                 {
                     method: 'POST',
                     body: JSON.stringify({
-                        idToken:userToken,
+                        idToken:Token,
                         displayName:userName,
                         photoUrl:userPic,
                         // deleteAttribute:DISPLAY_NAME,
@@ -121,7 +132,7 @@ const CompleteProfile = () => {
                           errorMessage = data.error.message;
                         }
                         // alert(errorMessage);
-                        // console.log(data);
+                        console.log(data);
                         throw new Error(errorMessage);
                       });
                     }
@@ -134,7 +145,7 @@ const CompleteProfile = () => {
             {
                 method: 'POST',
                 body: JSON.stringify({
-                    idToken:userToken,
+                    idToken:Token,
                     
         
                 }),
@@ -185,7 +196,7 @@ const CompleteProfile = () => {
           method: 'POST',
           body: JSON.stringify({
             requestType:"VERIFY_EMAIL",
-            idToken:userToken
+            idToken:Token
           })
         }).then(response =>{
           if(response.ok){
@@ -255,10 +266,10 @@ const CompleteProfile = () => {
         {!completeProfile && <>
     
         
-        <button onClick={editHandler} style={{ padding: '3px', border: 'none', background: '#cfcfcf', borderRadius:'10px',height:'28px', width:'145px' }}>Edit Details</button>
+        <button onClick={()=> editHandler()} style={{ padding: '3px', border: 'none', background: '#cfcfcf', borderRadius:'10px',height:'28px', width:'145px' }}>Edit Details</button>
         </>
         }
-        {authCtx.isLoggedIn && <caption style={{color:'Purple'}}>{userMail}</caption>}
+        {Token && <caption style={{color:'Purple'}}>{userMail}</caption>}
         <button className={styles.logoutbtn} onClick={logoutHandler}>LOGOUT</button>
  
       </header>
@@ -279,7 +290,7 @@ const CompleteProfile = () => {
         <div style={{ display:'flex', flexDirection: 'row' }}>
           <img src={url} alt='' style={{width:'25px', height:'25px'}}/>
           <label>Profile Photo URL </label>
-          <input type='text' placeholder= 'Profile Photo URL' ref={userPicref}/>
+          <input type='text' placeholder= 'Profile Photo URL' ref={userPicref} value={imgUrl} onChange={(e)=> {setImgUrl(e.target.value)}}/>
           </div>
           <br/>
           <button className={styles.updatebtn}>Update</button>
