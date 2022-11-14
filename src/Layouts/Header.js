@@ -1,36 +1,33 @@
-import React, {  useEffect} from 'react';
+import React, { useEffect } from 'react';
 // import AuthContext from '../Store/AuthContext';
-import {useDispatch} from 'react-redux';
-import {authActions} from '../Store/auth-slice';
-import { NavLink,useHistory} from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../Store/auth-slice';
+import { NavLink, useHistory } from 'react-router-dom';
 
-import styles from './Header.module.css'
+import styles from './Header.module.css';
 
 const Header = () => {
   const dispatch = useDispatch();
- 
-const history = useHistory();
+
+  const history = useHistory();
   const userMailId = localStorage.getItem('userMail');
   useEffect(() => {
-      if(!userMailId) {
-        history.push('/Login')
-      }
-    
-  },[])
+    if (!userMailId) {
+      history.push('/Login');
+    }
+  }, []);
   // const authCtx = useContext(AuthContext);
-  const logoutHandler=()=>{
-    localStorage.removeItem('userMail')
-    localStorage.removeItem('isLoggedIn')
+  const logoutHandler = () => {
+    localStorage.removeItem('userMail');
+    localStorage.removeItem('isLoggedIn');
     // authCtx.logout();
     dispatch(authActions.logout());
-    history.replace('/Login')
-  }
+    history.replace('/');
+  };
   return (
     <section>
-    {/* <div></div> */}
+      {/* <div></div> */}
       <nav>
-        
-
         <div className={styles.navbar}>
           <NavLink
             to="/Header"
@@ -51,11 +48,10 @@ const history = useHistory();
               textDecoration: 'none',
               color: 'white',
             }}
-        
           >
             DAILY EXPENSES
           </NavLink>
-          
+
           <NavLink
             to="/CompleteProfile"
             style={{
@@ -91,7 +87,6 @@ const history = useHistory();
             gap: '5px',
           }}
         >
-         
           <button
             to="/Login"
             style={{
@@ -99,8 +94,8 @@ const history = useHistory();
               color: 'white',
               position: 'relative',
               margin: '8px',
-              border:'none', 
-              top:'-18px',
+              border: 'none',
+              top: '-18px',
               background: 'none',
             }}
             onClick={logoutHandler}
@@ -108,24 +103,22 @@ const history = useHistory();
           >
             LOGOUT
           </button>
-          
         </div>
-        
       </nav>
-    
-      <section className={styles.body}>
-      <div className={styles.title}>
-        Welcome to  Expense Tracker !!!
-        <caption className={styles.caption}>
-          ~ Live for today, hope for tomorrow.
-        </caption>
-      </div>
-      <div>
-        <div className={styles.login}>
-        {userMailId && (
-            <>
 
-              <span  style={{
+      <section className={styles.body}>
+        <div className={styles.title}>
+          Welcome to Expense Tracker !!!
+          <caption className={styles.caption}>
+            ~ Live for today, hope for tomorrow.
+          </caption>
+        </div>
+        <div>
+          <div className={styles.login}>
+            {userMailId && (
+              <>
+                <span
+                  style={{
                     padding: '10px',
                     margin: '10px',
                     textDecoration: 'none',
@@ -133,19 +126,15 @@ const history = useHistory();
                     color: 'white',
                     fontFamily: 'Cursive',
                     fontSize: '25px',
-                  }}>
-                
-                 
-                
+                  }}
+                >
                   {userMailId}
-            
-              </span>
-            </>
-          )}
-          
+                </span>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     </section>
   );
 };

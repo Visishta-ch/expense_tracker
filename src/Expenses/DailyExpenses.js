@@ -6,7 +6,7 @@ import styles from './DailyExpenses.module.css';
 import Nav from '../Components/pages/Nav';
 import axios from 'axios';
 import {CSVLink} from 'react-csv';
-import useLocalStorage from 'use-local-storage';
+
 
 
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -14,7 +14,6 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 const DailyExpenses = () => {
   const dispatch = useDispatch();
   const [fetchData, setFetchData] = useState(false);
-  const [theme, setTheme] = useLocalStorage('theme'?'dark':'light')
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
@@ -235,7 +234,7 @@ console.log('userMail', usermail)
 
   const activatePremium = (e) => {
     e.preventDefault()
-    console.log('Activating premium')
+    //console.log('Activating premium')
     
     setDownloadbtn(true)
   
@@ -290,7 +289,7 @@ console.log('userMail', usermail)
               {total<10000 ? <p>Total Amount:{total}</p> : <div className={styles.premium}>
                 <p>Total Amount: {total}</p>
                 <p className={styles.premiumHeading}>Expenses exceeded 10K... Go for premium</p>
-                <button onClick={activatePremium} styles={{borderRadius:'5px'}}>Activate Premium</button>
+                <button onClick={activatePremium} styles={{borderRadius:'5px'}}>{!downloadbtn ?` Activate Premium `: `Activated Premium`}</button>
               </div>}
             </div>
           )}
